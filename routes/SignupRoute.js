@@ -8,11 +8,11 @@ const jwt = require("jsonwebtoken");
 
 const bcrypt = require("bcryptjs");
 
-// const cookieParser = require("cookie-parser");
+const si = require("systeminformation");
+
+var geoip = require("geoip-lite");
 
 const transport = require("../nodemailer/nodemail.config");
-
-// route.use(cookieParser());
 
 // // * Route Checking
 // route.get("/", (req, res) => {
@@ -43,15 +43,110 @@ route.post(
 
     const passwordHashed = await bcrypt.hash(req.body.user_password, 13);
 
-    const temp = new models.Users({
-      user_email: req.body.email,
-      user_name: {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-      },
-      user_password: passwordHashed,
-      user_confirmationCode: token,
-    });
+    const osInfo = await si
+      .osInfo()
+      .then((data) => {
+        return {
+          platform: data.platform,
+          distro: data.distro,
+          release: data.release,
+          hostname: data.hostname,
+        };
+        // console.log(osinfo);
+      })
+      .catch((error) => console.error(error));
+
+    const users = await si
+      .users()
+      .then((data) => {
+        return data;
+        // console.log(osinfo);
+      })
+      .catch((error) => console.error(error));
+    //*geoip and time zone checking
+    var geo = geoip.lookup(users.ip);
+    let zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    //   console.log(
+    //     new Date().toLocaleString("en-US", { zone }) + " " + zone
+    //   );
+
+    const uuid = await si
+      .uuid()
+      .then((data) => {
+        return data;
+        //   console.log(uuid);
+      })
+      .catch((error) => console.error(error));
+    //   console.log(uuid);
+    let temp;
+    if (geo !== null) {
+      temp = new models.Users({
+        user_email: req.body.email,
+        user_name: {
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+        },
+        user_password: passwordHashed,
+        user_confirmationCode: token,
+
+        signup_osInfo: {
+          platform: osInfo.platform,
+          distro: osInfo.distro,
+          release: osInfo.release,
+          hostname: osInfo.hostname,
+        },
+        signup_uuid: {
+          os: uuid.os,
+          hardware: uuid.hardware,
+          macs: uuid.macs,
+        },
+        signup_geo: {
+          range: geo.range,
+          country: geo.country,
+          region: geo.region,
+          eu: geo.eu,
+          timezone: geo.timezone,
+          city: geo.city,
+          ll: geo.ll,
+        },
+
+        signup_timezone:
+          new Date().toLocaleString("en-US", {
+            zone,
+          }) +
+          " " +
+          zone,
+      });
+    } else {
+      temp = new models.Users({
+        user_email: req.body.email,
+        user_name: {
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+        },
+        user_password: passwordHashed,
+        user_confirmationCode: token,
+
+        signup_osInfo: {
+          platform: osInfo.platform,
+          distro: osInfo.distro,
+          release: osInfo.release,
+          hostname: osInfo.hostname,
+        },
+        signup_uuid: {
+          os: uuid.os,
+          hardware: uuid.hardware,
+          macs: uuid.macs,
+        },
+
+        signup_timezone:
+          new Date().toLocaleString("en-US", {
+            zone,
+          }) +
+          " " +
+          zone,
+      });
+    }
 
     await temp.save(async (err, result) => {
       if (err) {

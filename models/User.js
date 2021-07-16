@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 
-const timeZone = require("mongoose-timezone");
-
 const userSchema = new mongoose.Schema({
   user_email: {
     type: String,
@@ -36,6 +34,56 @@ const userSchema = new mongoose.Schema({
     unique: true,
   },
 
+  signup_osInfo: {
+    platform: String,
+    distro: String,
+    release: String,
+    hostname: String,
+  },
+
+  signup_uuid: {
+    os: String,
+    hardware: String,
+    macs: [String],
+  },
+
+  signup_geo: {
+    country: String,
+    range: [Number],
+    region: String,
+    eu: String,
+    timezone: String,
+    city: String,
+    ll: [Number],
+  },
+
+  last_login_osInfo: {
+    platform: String,
+    distro: String,
+    release: String,
+    hostname: String,
+  },
+
+  last_login_uuid: {
+    os: String,
+    hardware: String,
+    macs: [String],
+  },
+
+  last_login_geo: {
+    range: [Number],
+    country: String,
+    region: String,
+    eu: String,
+    timezone: String,
+    city: String,
+    ll: [Number],
+  },
+
+  login_dates_regions: [String],
+
+  signup_timezone: String,
+
   createdDate: {
     type: Date,
     default: Date.now,
@@ -46,8 +94,6 @@ const userSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
-
-userSchema.plugin(timeZone, { paths: ["createdDate", "updatedDate"] });
 
 const Users = mongoose.model("user", userSchema);
 module.exports = Users;
