@@ -8,11 +8,11 @@ const jwt = require("jsonwebtoken");
 
 const bcrypt = require("bcryptjs");
 
-const cookieParser = require("cookie-parser");
+// const cookieParser = require("cookie-parser");
 
 const transport = require("../nodemailer/nodemail.config");
 
-route.use(cookieParser());
+// route.use(cookieParser());
 
 // // * Route Checking
 // route.get("/", (req, res) => {

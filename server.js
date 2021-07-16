@@ -24,6 +24,7 @@ app.use(
 );
 
 app.use("/signup", require("./routes/SignupRoute"));
+app.use("/login", require("./routes/LoginRoute"));
 
 app.listen(PORT, () => {
   console.log(`Server started at http://localhost:${PORT}`);
