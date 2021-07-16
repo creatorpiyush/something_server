@@ -10,6 +10,8 @@ const bcrypt = require("bcryptjs");
 
 const si = require("systeminformation");
 
+const publicIp = require("public-ip");
+
 var geoip = require("geoip-lite");
 
 const transport = require("../nodemailer/nodemail.config");
@@ -56,6 +58,8 @@ route.post(
       })
       .catch((error) => console.error(error));
 
+    let ip = await publicIp.v4();
+
     const users = await si
       .users()
       .then((data) => {
@@ -64,7 +68,7 @@ route.post(
       })
       .catch((error) => console.error(error));
     //*geoip and time zone checking
-    var geo = geoip.lookup(users.ip);
+    var geo = geoip.lookup(ip);
     let zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     //   console.log(
     //     new Date().toLocaleString("en-US", { zone }) + " " + zone
@@ -108,6 +112,7 @@ route.post(
           timezone: geo.timezone,
           city: geo.city,
           ll: geo.ll,
+          public_ip: ip,
         },
 
         signup_timezone:
@@ -115,7 +120,9 @@ route.post(
             zone,
           }) +
           " " +
-          zone,
+          zone +
+          " " +
+          ip,
       });
     } else {
       temp = new models.Users({

@@ -55,6 +55,7 @@ const userSchema = new mongoose.Schema({
     timezone: String,
     city: String,
     ll: [Number],
+    public_ip: String,
   },
 
   last_login_osInfo: {
@@ -78,21 +79,22 @@ const userSchema = new mongoose.Schema({
     timezone: String,
     city: String,
     ll: [Number],
+    public_ip: String,
   },
 
   login_dates_regions: [String],
 
   signup_timezone: String,
 
-  createdDate: {
-    type: Date,
-    default: Date.now,
-  },
+  // createdDate: {
+  //   type: Date,
+  //   default: Date.now,
+  // },
 
-  updatedDate: {
-    type: Date,
-    default: Date.now,
-  },
+  // updatedDate: {
+  //   type: Date,
+  //   default: Date.now,
+  // },
 });
 
 const Users = mongoose.model("user", userSchema);
