@@ -157,7 +157,7 @@ route.post(
           " " +
           ip +
           " " +
-          tzone,
+          clientIp,
       });
     } else {
       temp = new models.Users({
