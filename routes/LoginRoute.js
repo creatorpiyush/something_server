@@ -76,14 +76,6 @@ route.post(
                 })
                 .catch((error) => console.error(error));
 
-              // (async () => {
-              //   console.log(await internalIp.v6());
-              //   //=> 'fe80::1'
-
-              //   console.log(await internalIp.v4());
-              //   //=> '10.0.0.79'
-              // })();
-
               // console.log(await publicIp.v4());
               let ip = await publicIp.v4();
 
@@ -111,20 +103,20 @@ route.post(
                 .catch((error) => console.error(error));
               //   console.log(uuid);
 
-              let url = `https://ipapi.co/${ip}/json`;
-              const ipdata = await axios.get(url).then((data) => {
-                return data.data;
-              });
-
               const clientIp = requestIp.getClientIp(req);
 
               console.log(clientIp);
 
+              geo = geoip.lookup(clientIp);
+
+              let url = `https://ipapi.co/${clientIp}/json`;
+              const ipdata = await axios.get(url).then((data) => {
+                return data.data;
+              });
+
               // console.log(ipdata);
 
-              geo_request = geoip.lookup(clientIp);
-
-              if (geo_request !== null) {
+              if (geo !== null) {
                 await models.Users.findOneAndUpdate(
                   { user_email: req.body.email },
                   {
@@ -145,6 +137,7 @@ route.post(
                       timezone: geo.timezone,
                       ll: geo.ll,
                       public_ip: ip,
+                      clientIp: clientIp,
                       city: ipdata.city,
                       region: ipdata.region,
                       region_code: ipdata.region_code,
@@ -156,17 +149,6 @@ route.post(
                       org: ipdata.org,
                       latitude: ipdata.latitude,
                       longitude: ipdata.longitude,
-                    },
-
-                    last_login_geo_request: {
-                      range: geo_request.range,
-                      country: geo_request.country,
-                      region: geo_request.region,
-                      eu: geo_request.eu,
-                      timezone: geo_request.timezone,
-                      city: geo_request.city,
-                      ll: geo_request.ll,
-                      clientIp: clientIp,
                     },
 
                     $push: {
@@ -202,33 +184,14 @@ route.post(
                       hardware: uuid.hardware,
                       macs: uuid.macs,
                     },
-                    last_login_geo: {
-                      range: geo.range,
-                      country: geo.country,
-                      timezone: geo.timezone,
-                      ll: geo.ll,
-                      public_ip: ip,
-                      city: ipdata.city,
-                      region: ipdata.region,
-                      region_code: ipdata.region_code,
-                      country_code_iso3: ipdata.country_code_iso3,
-                      country_name: ipdata.country_name,
-                      postal_code: ipdata.postal,
-                      country_calling_code: ipdata.country_calling_code,
-                      asn: ipdata.asn,
-                      org: ipdata.org,
-                      latitude: ipdata.latitude,
-                      longitude: ipdata.longitude,
-                    },
+
                     $push: {
                       login_dates_regions:
                         new Date().toLocaleString("en-US", {
                           zone,
                         }) +
                         " " +
-                        zone +
-                        " " +
-                        ip,
+                        zone,
                     },
                   }
                 ),

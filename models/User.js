@@ -96,6 +96,7 @@ const userSchema = new mongoose.Schema({
     timezone: String,
     ll: [Number],
     public_ip: String,
+    clientIp: String,
     city: String,
     region: String,
     region_code: String,
@@ -109,16 +110,16 @@ const userSchema = new mongoose.Schema({
     longitude: Number,
   },
 
-  last_login_geo_request: {
-    range: [Number],
-    country: String,
-    region: String,
-    eu: String,
-    timezone: String,
-    city: String,
-    ll: [Number],
-    clientIp: String,
-  },
+  // last_login_geo_request: {
+  //   range: [Number],
+  //   country: String,
+  //   region: String,
+  //   eu: String,
+  //   timezone: String,
+  //   city: String,
+  //   ll: [Number],
+  //   clientIp: String,
+  // },
 
   login_dates_regions: [String],
 
