@@ -155,11 +155,13 @@ route.post(
 
                     $push: {
                       login_dates_regions:
-                        new Date().toLocaleString("en-US", {
+                        new Date().toLocaleString("en-IN", {
                           tzone,
                         }) +
                         " " +
                         tzone +
+                        " " +
+                        geo.utc_offset +
                         " " +
                         ip +
                         " " +
@@ -189,7 +191,7 @@ route.post(
 
                     $push: {
                       login_dates_regions:
-                        new Date().toLocaleString("en-US", {
+                        new Date().toLocaleString("en-IN", {
                           zone,
                         }) +
                         " " +

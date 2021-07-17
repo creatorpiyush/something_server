@@ -147,11 +147,13 @@ route.post(
         },
 
         signup_timezone:
-          new Date().toLocaleString("en-US", {
-            timezone,
+          new Date().toLocaleString("en-IN", {
+            tzone,
           }) +
           " " +
           tzone +
+          " " +
+          geo.utc_offset +
           " " +
           ip +
           " " +
@@ -180,7 +182,7 @@ route.post(
         },
 
         signup_timezone:
-          new Date().toLocaleString("en-US", {
+          new Date().toLocaleString("en-IN", {
             zone,
           }) +
           " " +
