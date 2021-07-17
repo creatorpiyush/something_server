@@ -104,6 +104,8 @@ route.post(
 
     let temp;
     if (geo !== null) {
+      const tzone = geo.timezone;
+
       temp = new models.Users({
         user_email: req.body.email,
         user_name: {
@@ -146,14 +148,14 @@ route.post(
 
         signup_timezone:
           new Date().toLocaleString("en-US", {
-            zone,
+            timezone,
           }) +
           " " +
-          zone +
+          tzone +
           " " +
           ip +
           " " +
-          clientIp,
+          tzone,
       });
     } else {
       temp = new models.Users({

@@ -117,6 +117,8 @@ route.post(
               // console.log(ipdata);
 
               if (geo !== null) {
+                const tzone = geo.timezone;
+
                 await models.Users.findOneAndUpdate(
                   { user_email: req.body.email },
                   {
@@ -154,10 +156,10 @@ route.post(
                     $push: {
                       login_dates_regions:
                         new Date().toLocaleString("en-US", {
-                          zone,
+                          tzone,
                         }) +
                         " " +
-                        zone +
+                        tzone +
                         " " +
                         ip +
                         " " +
