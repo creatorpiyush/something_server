@@ -266,9 +266,7 @@ route.post(
         } else {
           return res.json({
             type: "not-verified",
-            msg: `Please Verify your Account first or Request Resend Confirmation Mail http://localhost:${
-              process.env.PORT || 5555
-            }/signup/confirm/resend`,
+            msg: `Please Verify your Account first or Request Resend Confirmation Mail ${process.env.Local_PORT}/signup/confirm/resend`,
           });
         }
       }

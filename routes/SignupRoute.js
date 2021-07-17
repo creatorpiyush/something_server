@@ -228,9 +228,7 @@ route.post(
           html: `<h1>Email Confirmation</h1>
             <h2>Hello ${result.user_name.firstName}</h2>
             <p>Thank you for subscribing. Please confirm your email by clicking on the following link</p>
-            <a href=http://localhost:${
-              process.env.PORT || 5555
-            }/signup/confirm/${result.user_confirmationCode}> Click here</a>
+            <a href=${process.env.Local_PORT}/signup/confirm/${result.user_confirmationCode}> Click here</a>
             </div>`,
         })
         .catch(async (err) => {
@@ -250,9 +248,7 @@ route.post(
 
       await res.send({
         message: `User was registered successfully! Please check your email 
-                  if not received resend: http://localhost:${
-                    process.env.PORT || 5555
-                  }/signup/confirm/resend`,
+                  if not received resend: ${process.env.Local_PORT}/signup/confirm/resend`,
       });
     });
   }
@@ -291,9 +287,7 @@ route.post("/confirm/resend", async (req, res) => {
           html: `<h1>Email Confirmation</h1>
           <h2>Hello ${req.cookies.user_data.firstName}</h2>
           <p>Thank you for subscribing. Please confirm your email by clicking on the following link</p>
-          <a href=http://localhost:${
-            process.env.PORT || 5555
-          }/signup/confirm/${token}> Click here</a>
+          <a href=${process.env.Local_PORT}/signup/confirm/${token}> Click here</a>
           </div>`,
         })
         .catch(async (err) => {
@@ -305,9 +299,7 @@ route.post("/confirm/resend", async (req, res) => {
 
       await res.send({
         message: `Please check your email
-                if not received resend: http://localhost${
-                  process.env.PORT || 5555
-                }/signup/confirm/resend`,
+                if not received resend: ${process.env.Local_PORT}/signup/confirm/resend`,
       });
     }
   );
