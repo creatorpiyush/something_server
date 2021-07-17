@@ -161,7 +161,7 @@ route.post(
                         " " +
                         tzone +
                         " " +
-                        geo.utc_offset +
+                        ipdata.utc_offset +
                         " " +
                         ip +
                         " " +
