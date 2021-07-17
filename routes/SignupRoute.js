@@ -130,6 +130,7 @@ route.post(
           timezone: geo.timezone,
           ll: geo.ll,
           public_ip: ip,
+          clientIp: clientIp,
           city: ipdata.city,
           region: ipdata.region,
           region_code: ipdata.region_code,
