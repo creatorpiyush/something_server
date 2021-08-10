@@ -31,7 +31,6 @@ const userSchema = new mongoose.Schema({
   user_confirmationCode: {
     type: String,
     expires: 2000,
-    unique: true,
   },
 
   signup_osInfo: {

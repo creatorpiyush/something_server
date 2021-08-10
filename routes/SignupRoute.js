@@ -18,6 +18,16 @@ var geoip = require("geoip-lite");
 
 const requestIp = require("request-ip");
 
+const {
+  Signup_Email_HTML,
+  Signup_Email_Subject,
+} = require("../nodemailer/Signup_mail_content");
+
+const {
+  Confirm_Resend_Email_HTML,
+  Confirm_Resend_Email_Subject,
+} = require("../nodemailer/Resend_confirmation");
+
 const transport = require("../nodemailer/nodemail.config");
 
 // // * Route Checking
@@ -195,16 +205,20 @@ route.post(
         return res.send({ err: err });
       }
 
+      const user_mail_data = { result };
+
+      // console.log(user_mail_data);
+
+      const html_template = Signup_Email_HTML(user_mail_data);
+
+      const html_subject = Signup_Email_Subject();
+
       await transport
         .sendMail({
           from: process.env.Nodemailer_USER,
           to: result.user_email,
-          subject: "Please confirm your account",
-          html: `<h1>Email Confirmation</h1>
-            <h2>Hello ${result.user_name.firstName}</h2>
-            <p>Thank you for subscribing. Please confirm your email by clicking on the following link</p>
-            <a href=${process.env.Local_PORT}/signup/confirm/${result.user_confirmationCode}> Click here</a>
-            </div>`,
+          subject: html_subject,
+          html: html_template,
         })
         .catch(async (err) => {
           await models.Users.findOneAndDelete({
@@ -222,7 +236,7 @@ route.post(
       // console.log(req.cookies);
 
       await res.send({
-        message: `User was registered successfully! Please check your email 
+        message: `User registered successfully! Please check your email 
                   if not received resend: ${process.env.Local_PORT}/signup/confirm/resend`,
       });
     });
@@ -254,16 +268,20 @@ route.post("/confirm/resend", async (req, res) => {
         return res.send({ err: err });
       }
 
+      const user_mail_data = { result, req, token };
+
+      // console.log(user_mail_data);
+
+      const html_template = Confirm_Resend_Email_HTML(user_mail_data);
+
+      const html_subject = Confirm_Resend_Email_Subject();
+
       await transport
         .sendMail({
           from: process.env.Nodemailer_USER,
           to: result.user_email,
-          subject: "Please confirm your account",
-          html: `<h1>Email Confirmation</h1>
-          <h2>Hello ${req.cookies.user_data.firstName}</h2>
-          <p>Thank you for subscribing. Please confirm your email by clicking on the following link</p>
-          <a href=${process.env.Local_PORT}/signup/confirm/${token}> Click here</a>
-          </div>`,
+          subject: html_subject,
+          html: html_template,
         })
         .catch(async (err) => {
           await models.Users.findOneAndDelete({
@@ -306,7 +324,7 @@ route.get("/confirm/:token", async (req, res) => {
 
       await models.Users.findOneAndUpdate(
         { user_confirmationCode: req.params.token },
-        { $set: { user_status: "Active" } },
+        { $set: { user_status: "Active", user_confirmationCode: null } },
         async (err, result) => {
           if (err) return res.status(500).send(`value not updated`);
 
