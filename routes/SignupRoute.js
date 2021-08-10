@@ -103,7 +103,7 @@ route.post(
 
     const clientIp = requestIp.getClientIp(req);
 
-    console.log(clientIp);
+    // console.log(clientIp);
 
     geo = geoip.lookup(clientIp);
 

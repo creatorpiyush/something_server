@@ -134,6 +134,8 @@ const userSchema = new mongoose.Schema({
   //   type: Date,
   //   default: Date.now,
   // },
+
+  forget_password_token: String,
 });
 
 const Users = mongoose.model("user", userSchema);

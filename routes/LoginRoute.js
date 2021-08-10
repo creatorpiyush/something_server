@@ -105,7 +105,7 @@ route.post(
 
               const clientIp = requestIp.getClientIp(req);
 
-              console.log(clientIp);
+              // console.log(clientIp);
 
               geo = geoip.lookup(clientIp);
 
@@ -212,7 +212,7 @@ route.post(
 
               const html_subject = Login_Email_Subject(user_mail_data);
 
-              transport.sendMail({
+              await transport.sendMail({
                 from: process.env.Nodemailer_USER,
                 to: result.user_email,
                 subject: html_subject,
