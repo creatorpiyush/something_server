@@ -23,6 +23,13 @@ const {
 
 const transport = require("../nodemailer/nodemail.config");
 
+route.get("/", (req, res) => {
+  if (req.cookies.user_data) {
+    return res.redirect("/");
+  }
+  return res.render("login");
+});
+
 route.post(
   "/",
   [

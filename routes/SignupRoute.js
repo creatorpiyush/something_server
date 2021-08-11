@@ -30,10 +30,12 @@ const {
 
 const transport = require("../nodemailer/nodemail.config");
 
-// // * Route Checking
-// route.get("/", (req, res) => {
-//   res.send("Signup");
-// });
+route.get("/", (req, res) => {
+  if (req.cookies.user_data) {
+    return res.redirect("/");
+  }
+  return res.render("signup");
+});
 
 // ***************************************
 // *
@@ -45,11 +47,16 @@ route.post(
     body("email").isEmail().not().isEmpty(),
     body("firstName").not().isEmpty(),
     body("user_password").isLength({ min: 8 }).not().isEmpty(),
+    body("user_password_confirm").isLength({ min: 8 }).not().isEmpty(),
   ],
   async (req, res) => {
     const err = await validationResult(req);
     if (!err.isEmpty()) {
       return res.status(400).json({ err: err.array() });
+    }
+
+    if (req.body.user_password !== req.body.user_password_confirm) {
+      return res.status(400).json({ err: ["Passwords do not match"] });
     }
 
     const token = jwt.sign(
