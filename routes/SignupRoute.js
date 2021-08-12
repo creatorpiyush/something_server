@@ -75,7 +75,6 @@ route.post(
           release: data.release,
           hostname: data.hostname,
         };
-        // console.log(osinfo);
       })
       .catch((error) => console.error(error));
 
@@ -85,32 +84,20 @@ route.post(
       .users()
       .then((data) => {
         return data;
-        // console.log(osinfo);
       })
       .catch((error) => console.error(error));
     //*geoip and time zone checking
     var geo = geoip.lookup(ip);
     let zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    //   console.log(
-    //     new Date().toLocaleString("en-US", { zone }) + " " + zone
-    //   );
 
     const uuid = await si
       .uuid()
       .then((data) => {
         return data;
-        //   console.log(uuid);
       })
       .catch((error) => console.error(error));
-    //   console.log(uuid);
-
-    // console.log(ipdata);
-
-    // geo_request = geoip.lookup(clientIp);
 
     const clientIp = requestIp.getClientIp(req);
-
-    // console.log(clientIp);
 
     geo = geoip.lookup(clientIp);
 
@@ -214,8 +201,6 @@ route.post(
 
       const user_mail_data = { result };
 
-      // console.log(user_mail_data);
-
       const html_template = Signup_Email_HTML(user_mail_data);
 
       const html_subject = Signup_Email_Subject();
@@ -239,8 +224,6 @@ route.post(
         firstName: result.user_name.firstName,
         user_email: result.user_email,
       });
-
-      // console.log(req.cookies);
 
       await res.send({
         message: `User registered successfully! Please check your email 

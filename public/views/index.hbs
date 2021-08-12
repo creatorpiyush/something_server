@@ -7,7 +7,13 @@
   </head>
   <body>
 
-    <h1>Hi</h1>
+    <h1>Hi {{user.user_name.firstName}}</h1>
+
+    <h3>Email: {{user.user_email}}</h3>
+
+    {{!-- <p>{{user}}</p> --}}
+
+    <p>{{error}}</p>
 
     <form action="/logout" method="post">
       <input type="submit" value="Logout" />

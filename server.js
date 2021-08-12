@@ -19,8 +19,6 @@ app.use("/", express.static(__dirname + "/public"));
 app.set("view engine", "hbs");
 app.set("views", "./public/views");
 
-app.use(flash());
-
 app.use(cookieParser());
 
 app.use(
@@ -30,6 +28,8 @@ app.use(
     secret: ["key1", "key2"],
   })
 );
+
+app.use(flash());
 
 app.use("/", require("./routes/indexRoute"));
 app.use("/signup", require("./routes/SignupRoute"));

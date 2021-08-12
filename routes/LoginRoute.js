@@ -6,6 +6,8 @@ const { body, validationResult } = require("express-validator");
 
 const bcrypt = require("bcryptjs");
 
+const session = require("express-session");
+
 const si = require("systeminformation");
 
 const axios = require("axios").default;
@@ -226,7 +228,18 @@ route.post(
                 html: html_template,
               });
 
-              return res.status(200).json(result);
+              // return res.status(200).json(result);
+
+              res.cookie(`user_data`, {
+                user_status: result.user_status,
+                firstName: result.user_name.firstName,
+                user_email: result.user_email,
+                password_done: true,
+              });
+
+              // req.flash("message", "Hi");
+
+              return res.redirect("/");
             }
             // if password is incorrect
             else {
